@@ -1,0 +1,7 @@
+functions:
+    add_event
+    remove_event
+    update_event
+    suggest_next_slot
+    find_gaps
+    search by id tags etc
