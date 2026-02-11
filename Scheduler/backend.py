@@ -21,7 +21,7 @@ class Day:
         self.number = days_of_week[day.lower()]
         self.events = []
         self.timeslots = {x: [] for x in
-                          (1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23, 24)}
+                          (0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18, 19, 20, 21, 22, 23)}
         if day.lower() in Day.workdays:
             shift = Event(self.day_name, "15:00", '19:00', 'Work', "Mister car wash")
             self.add_event(shift)
@@ -103,7 +103,7 @@ school = Event('monday', '12:20', '14:30', 'school(pmo)', 'Missouri State Univer
 Gareth.add_event(school, work)
 
 def create_event():
-    event_day = input("What is the day of your event? ")
+    event_day = input("What is the day of your event? ").lower
     while event_day not in days_of_week.keys():
         event_day = input("please give a valid day of the week. What is the day of your event? ").lower()
     event_start_time = input("What is the start time of your event? ")
@@ -121,3 +121,5 @@ new_event = create_event()
 Gareth.add_event(new_event)
 
 print(Gareth.schedule)
+
+print()
