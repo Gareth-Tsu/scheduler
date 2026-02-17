@@ -1,7 +1,11 @@
-functions:
+Functions:
     add_event
     remove_event
     update_event
-    suggest_next_slot
-    find_gaps
-    search by id tags etc
+Testing:
+    add unit tests to each class
+
+Users:
+    add more functionality to user class
+
+add event priority and use that for rescheduling
