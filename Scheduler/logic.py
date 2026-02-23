@@ -1,8 +1,8 @@
 from datetime import datetime
 
-time_pattern = r'^\d{1,2}:\d{1,2}$'
+
 days_of_week = {'monday': 0, 'tuesday': 1, 'wednesday': 2, 'thursday': 3, 'friday': 4, 'saturday': 5, 'sunday': 6}
-id_tags = []
+# This dictionary is used to number days and assign events to days
 
 
 class TimeConflict(Exception):
@@ -34,8 +34,10 @@ class Day:
     def __init__(self, day: str):
         if day.lower() not in days_of_week:
             raise IndexError
+        #validating argument
         self.day_name = day
         self.number = days_of_week[day.lower()]
+        #used when assigning events to days
         self.events = []
 
     def has_conflict(self, new_event):
@@ -51,6 +53,7 @@ class Day:
         if not conflict:
             self.events.append(event)
             self.events.sort(key=lambda e: e.start_time)
+            # Sorts events by start time
             return
 
         # If there is a conflict, try to auto-resolve by priority.
@@ -101,12 +104,11 @@ class Day:
 # events need to have a date and location
 class Event:
     def __init__(self, day: str, start_time: str, end_time: str,
-                 title: str, location: str, tags: set[str] = None, priority: int = 4):
+                 title: str, location: str, priority: int = 4):
         self.day_num = days_of_week[day.lower()]
         self.location = location
         self.day = day
         self.priority = priority
-        self.tags = tags
         self.title = title
         try:
             self.start_time = datetime.strptime(start_time, "%H:%M")
@@ -129,14 +131,10 @@ class Event:
 
 
 class User:
-    # User needs to be able to have default events as well as have a week and a timeline and a schedule
     def __init__(self, name):
         self.name = name
         self.week = [Day(x) for x in days_of_week]
-
-    def add_default_event(self, event):
-        pass
-        # Work in progress
+        # Creates a list of day objects each corresponding to the days in the week
 
     def add_event(self, *args):
         for event in args:
