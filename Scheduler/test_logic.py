@@ -16,6 +16,8 @@ def test_event_init():
     assert e.title == "class"
     assert e.location == "missouri state"
     assert e.duration == e.end_time - e.start_time
+    assert e.id is not None
+    assert isinstance(e.id, str)
 
 
 def test_event_parse_time():
@@ -206,3 +208,4 @@ def test_invalid_duration_timeconflict_has_no_events():
     exc = excinfo.value
     assert exc.new_event is None
     assert exc.existing_event is None
+

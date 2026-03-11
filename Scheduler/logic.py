@@ -1,3 +1,4 @@
+import uuid
 from datetime import datetime
 
 
@@ -109,6 +110,7 @@ class Event:
         self.location = location
         self.day = day
         self.priority = priority
+        self.id = str(uuid.uuid4())
         self.title = title
         try:
             self.start_time = datetime.strptime(start_time, "%H:%M")

@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Weekly Scheduler</title>
+    <style>
+        /* Basic reset */
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 20px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+            color: #c6c6c6;
+        }
+
+        /* The calendar grid — one column per day */
+        .calendar {
+            display: grid;
+            grid-template-columns: repeat(7, 1fr);
+            gap: 10px;
+        }
+
+        /* Each day column */
+        .day-column {
+            background: #16213e;
+            border-radius: 8px;
+            padding: 5px;
+            min-height: 400px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        /* Day header */
+        .day-header {
+            font-weight: bold;
+            text-align: center;
+            padding-bottom: 8px;
+            margin-bottom: 8px;
+            border-bottom: 2px solid #e0e0e0;
+            color: #a3a3a3;
+            background: #0f3460;
+            text-transform: capitalize;
+        }
+
+        /* Each event block */
+        .event {
+            background: #0f3460;
+            border-radius: 6px;
+            padding: 8px;
+            margin-bottom: 6px;
+            font-size: 0.85em;
+        }
+
+        .event .event-title {
+            font-weight: bold;
+            margin-bottom: 2px;
+        }
+
+        .event .event-time {
+            font-size: 0.8em;
+            opacity: 0.85;
+            color: #aaa;
+        }
+
+        .event .event-location {
+            font-size: 0.8em;
+            opacity: 0.85;
+            color: #999;
+        }
+
+        /* Empty day message */
+        .no-events {
+            color: #595959;
+            font-size: 0.85em;
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        .form-container {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 20px;
+            margin-bottom: 20px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.1);
+        }
+
+        .form-container h2 {
+            margin-bottom: 12px;
+            color: #0f3460;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 10px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #444;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            flex: 1;
+        }
+
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+        }
+
+        button:hover {
+            background: #357abd;
+        }
+
+        .error-banner {
+            background: #ffe0e0;
+            border: 1px solid #ffaaaa;
+            color: #cc0000;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+
+    <h1>Weekly Schedule</h1>
+    <!-- Show conflict warning if there is one -->
+    {% if error %}
+    <div class="error-banner">
+        ⚠️ {{ error }}
+    </div>
+    {% endif %}
+
+    <!-- Add event form -->
+    <div class="form-container">
+        <h2>Add Event</h2>
+        <form action="/add" method="POST">
+
+            <div class="form-row">
+                <input name="title" placeholder="Title" required>
+                <input name="location" placeholder="Location" required>
+            </div>
+
+            <div class="form-row">
+                <select name="day" required>
+                    <option value="">-- Day --</option>
+                    <option value="monday">Monday</option>
+                    <option value="tuesday">Tuesday</option>
+                    <option value="wednesday">Wednesday</option>
+                    <option value="thursday">Thursday</option>
+                    <option value="friday">Friday</option>
+                    <option value="saturday">Saturday</option>
+                    <option value="sunday">Sunday</option>
+                </select>
+
+                <input name="start_time" type="time" required>
+                <input name="end_time" type="time" required>
+
+                <select name="priority">
+                    <option value="1">Priority 1 (highest)</option>
+                    <option value="2">Priority 2</option>
+                    <option value="3">Priority 3</option>
+                    <option value="4" selected>Priority 4 (default)</option>
+                </select>
+            </div>
+
+            <button type="submit">Add Event</button>
+        </form>
+    </div>
+    <div class="calendar">
+        <!-- Loop through each day in the week (passed from Flask) -->
+        {% for day in week %}
+        <div class="day-column">
+
+            <!-- Day name header -->
+            <div class="day-header">{{ day.day_name }}</div>
+
+            <!-- If the day has events, show them -->
+            {% if day.events %}
+                {% for event in day.events %}
+                <div class="event">
+                    <div class="event-title">{{ event.title }}</div>
+                    <div class="event-time">
+                        {{ event.start_time.strftime('%H:%M') }} – {{ event.end_time.strftime('%H:%M') }}
+                    </div>
+                    <div class="event-location">@ {{ event.location }}</div>
+                    <form action="/remove" method="POST" style="margin-top: 6px;">
+                        <input type="hidden" name="event_id" value="{{ event.id }}">
+                        <button type="submit" style="
+                            background: #c0392b;
+                            color: white;
+                            border: none;
+                            border-radius: 3px;
+                            padding: 3px 8px;
+                            cursor: pointer;
+                            font-size: 11px;
+                        ">Remove</button>
+                    </form>
+                </div>
+                {% endfor %}
+
+            <!-- Otherwise show a placeholder -->
+            {% else %}
+                <div class="no-events">No events</div>
+            {% endif %}
+
+        </div>
+        {% endfor %}
+    </div>
+
+</body>
+</html>

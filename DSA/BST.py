@@ -22,7 +22,7 @@ class BinarySearchTree:
                         break
                     else:
                         temp = temp.left
-                elif value > temp.value:
+                elif value >= temp.value:
                     if temp.right is None:
                         temp.right = Node(value)
                         break
@@ -56,6 +56,5 @@ class BinarySearchTree:
 
 
 
-if __name__ == '__main__':
-    tree = BinarySearchTree(1, 2, 3, 4, 5, 6, 7)
-print(    tree.contains(9))
+tree = BinarySearchTree(1, 2, 3, 4, 5, 6, 7)
+print(tree.contains(9))

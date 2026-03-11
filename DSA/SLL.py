@@ -156,9 +156,9 @@ class SinglyLinkedList:
 
 
         
-
-linked = SinglyLinkedList(1, 4, 9, 16, 25)
-linked.insert(10, 3)
-linked.insert(1, 0)
-linked.remove(0)
-linked.show()
+if __name__ == "__main__":
+    linked = SinglyLinkedList(1, 4, 9, 16, 25)
+    linked.insert(10, 3)
+    linked.insert(1, 0)
+    linked.remove(0)
+    linked.show()
