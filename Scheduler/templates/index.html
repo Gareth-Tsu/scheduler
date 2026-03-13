@@ -138,7 +138,10 @@
 </head>
 <body>
 
-    <h1>Weekly Schedule</h1>
+   <div style="display: flex; justify-content: space-between; align-items: center;">
+    <h1>📅 {{ username }}'s Scheduler</h1>
+    <a href="/logout" style="color: #e0e0e0; font-size: 14px;">Logout</a>
+</div>
     <!-- Show conflict warning if there is one -->
     {% if error %}
     <div class="error-banner">
@@ -168,8 +171,8 @@
                     <option value="sunday">Sunday</option>
                 </select>
 
-                <input name="start_time" type="time" required>
-                <input name="end_time" type="time" required>
+                <input name="start" type="time" required>
+                <input name="end" type="time" required>
 
                 <select name="priority">
                     <option value="1">Priority 1 (highest)</option>

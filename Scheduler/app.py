@@ -6,7 +6,7 @@ from database import (init_db, save_event, delete_event,
                       get_user_by_username, check_password)
 
 app = Flask(__name__)
-app.secret_key = "change-this-to-something-random"  # encrypts the session cookie
+app.secret_key = "fluffy-bunny's-and-teddy-bears"  # encrypts the session cookie
 
 init_db()
 
