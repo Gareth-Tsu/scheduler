@@ -4,10 +4,13 @@ from logic import User, Event, TimeConflict
 from database import (init_db, save_event, delete_event,
                       load_events_for_user, create_user,
                       get_user_by_username, check_password)
+import os
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "fluffy-bunny's-and-teddy-bears"  # encrypts the session cookie
-
+app.secret_key = os.getenv("SECRET_KEY")
 init_db()
 
 # --- Login Required Decorator ---
@@ -119,14 +122,9 @@ def add_event():
 @login_required
 def remove_event():
     event_id = request.form["event_id"]
-    user = get_current_user()
 
-    for day in user.week:
-        event_to_remove = next((e for e in day.events if e.id == event_id), None)
-        if event_to_remove:
-            day.remove_event(event_to_remove)
-            delete_event(event_id)
-            break
+    # Remove from database first
+    delete_event(event_id)
 
     return redirect(url_for("home"))
 
