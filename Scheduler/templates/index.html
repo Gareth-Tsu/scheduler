@@ -139,13 +139,13 @@
 <body>
 
    <div style="display: flex; justify-content: space-between; align-items: center;">
-    <h1>📅 {{ username }}'s Scheduler</h1>
+    <h1> {{ username }}'s Scheduler</h1>
     <a href="/logout" style="color: #e0e0e0; font-size: 14px;">Logout</a>
 </div>
     <!-- Show conflict warning if there is one -->
-    {% if error %}
+    {% if conflict %}
     <div class="error-banner">
-        ⚠️ {{ error }}
+        ⚠️ {{ conflict }}
     </div>
     {% endif %}
 

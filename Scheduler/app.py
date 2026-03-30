@@ -38,6 +38,8 @@ def get_current_user():
 
 @app.route("/register", methods=["GET", "POST"])
 def register():
+    if "user_id" in session:
+        return redirect(url_for("home"))
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]
@@ -57,6 +59,8 @@ def register():
 
 @app.route("/login", methods=["GET", "POST"])
 def login():
+    if "user_id" in session:
+        return redirect(url_for("home"))
     if request.method == "POST":
         username = request.form["username"]
         password = request.form["password"]

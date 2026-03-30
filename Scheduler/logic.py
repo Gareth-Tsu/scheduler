@@ -115,8 +115,8 @@ class Event:
         try:
             self.start_time = datetime.strptime(start_time, "%H:%M")
             self.end_time = datetime.strptime(end_time, "%H:%M")
-        except:
-            raise ValueError
+        except ValueError:
+            raise ValueError("Invalid time format. Use HH:MM")
         self.duration = self.end_time - self.start_time
         if self.duration.total_seconds() == 0 or self.start_time >= self.end_time:
             # Invalid event duration

@@ -3,3 +3,4 @@
 / codestuffv2/
 /.vscode/
 scheduler.db
+.env
