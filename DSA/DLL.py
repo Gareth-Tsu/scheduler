@@ -29,18 +29,35 @@ class DoublyLinkedList:
             new_node.prev = prev
             self.length += 1
 
-    def print(self):
+    def show(self):
         temp = self.head
         content = []
         if temp is None:
             print("Empty list")
         else:
             while temp is not None:
-                content.append(f"{temp.value}")
+                content.append(temp.value)
                 temp = temp.next
-        print(content)
+        return content
 
-if __name__ == "__main__":
-    double = DoublyLinkedList(1,2,3,4,5,6,7)
-    double.append(41)
-    double.print()
+    def reverse(self):
+        if self.head is None:
+            return None
+        if self.head is self.tail:
+            return None
+        else:
+            old_head = self.head
+            old_tail = self.tail
+            curr = old_head
+            prev = None
+            while curr is not None:
+                curr.prev = curr.next
+                curr.next = prev
+                prev = curr
+                curr = curr.prev
+            self.head = old_tail
+            self.tail = old_head
+            return self
+
+
+

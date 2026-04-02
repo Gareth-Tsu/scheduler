@@ -62,12 +62,7 @@ class SinglyLinkedList:
         if index < 0 or index >= self.count:
             return None
         else:
-            current = self.head
-            count = 0
-            while count < index:
-                current = current.next
-                count += 1
-            current.data = value
+            self.get(index).data = value
             return self
 
     def insert(self, data, index):
@@ -113,6 +108,7 @@ class SinglyLinkedList:
     def show(self):
         if self.head is None:
             print("Empty List")
+            return None
         else:
             current = self.head
             content = []
@@ -120,7 +116,7 @@ class SinglyLinkedList:
                 content.append(current.data)
                 current = current.next
             content.append(self.tail.data)
-            print(content)
+            return content
 
     def first_pop(self):
         if not self.head:
@@ -146,19 +142,46 @@ class SinglyLinkedList:
         removed.next = None
         self.count -= 1
         return self
-    
+
     def reverse(self):
-        temp = self.head
-        self.head = self.tail
-        self.tail = self.head
-        for n in range(self.count):
-            pass
+        if self.head is None:
+            return self
+        if self.head is self.tail:
+            return self
+        old_head = self.head
+        old_tail = self.tail
+        curr = self.head
+        prev = None
+        while curr is not None:
+            nex = curr.next
+            curr.next = prev
+            prev = curr
+            curr = nex
+        self.head = old_tail
+        self.tail = old_head
+        self.tail.next = None
+        return self
+
+    def middle(self):
+        if self.head is self.tail:
+            return self.head
+        if self.head is None:
+            return Node
+        else:
+            mid = self.head
+            runna = self.head
+            while runna is not None:
+                mid = mid.next
+                runna = runna.next.next
+            return mid
 
 
+def merge_lists(list1, list2):
+    pass
+    #todo: finish this function
         
 if __name__ == "__main__":
-    linked = SinglyLinkedList(1, 4, 9, 16, 25)
-    linked.insert(10, 3)
-    linked.insert(1, 0)
-    linked.remove(0)
-    linked.show()
+    linked = SinglyLinkedList(1,2,3,4,5)
+    print(linked.show())
+    linked.reverse()
+    print(linked.show())
