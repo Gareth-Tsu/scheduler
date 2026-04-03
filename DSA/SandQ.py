@@ -72,4 +72,16 @@ class Queue:
                 content.append(temp.value)
                 temp = temp.next
             return content
-            
+
+#This function fails the tests, and I am not sure why
+def is_valid(string):
+    stack = Stack()
+    matches = {")": "(", "]": "[", "}": "{"}
+    for char in string:
+        if char in "({[":
+            stack.push(char)
+        elif char in matches:
+            if stack.height == 0 or stack.top.value != matches[char]:
+                return False
+            stack.pop()
+    return stack.height == 0

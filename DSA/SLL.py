@@ -163,22 +163,51 @@ class SinglyLinkedList:
         return self
 
     def middle(self):
+        if self.head is None:
+            return None
         if self.head is self.tail:
             return self.head
-        if self.head is None:
-            return Node
+
         else:
             mid = self.head
             runna = self.head
-            while runna is not None:
+            while runna is not None and runna.next is not None:
                 mid = mid.next
                 runna = runna.next.next
             return mid
+    def has_cycle(self):
+        if self.head is None:
+            return False
+        if self.head is self.tail:
+            return False
+        else:
+            slow = fast = self.head
+            while fast and fast.next is not None:
+                slow = slow.next
+                fast = fast.next.next
+                if slow is fast:
+                    return True
 
+        return False
 
 def merge_lists(list1, list2):
-    pass
-    #todo: finish this function
+    list1Node = list1.head
+    list2Node = list2.head
+    new = SinglyLinkedList()
+    while list1Node and list2Node:
+        if list1Node.data < list2Node.data:
+            new.append(list1Node.data)
+            list1Node = list1Node.next
+        else:
+            new.append(list2Node.data)
+            list2Node = list2Node.next
+    while list1Node:
+        new.append(list1Node.data)
+        list1Node = list1Node.next
+    while list2Node:
+        new.append(list2Node.data)
+        list2Node = list2Node.next
+    return new
         
 if __name__ == "__main__":
     linked = SinglyLinkedList(1,2,3,4,5)
