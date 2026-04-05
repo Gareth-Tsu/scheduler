@@ -14,7 +14,7 @@ class HashTable:
 
     def set_item(self, key, value):
         index = self.__hash(key)
-        if self.data_map[index] == None:
+        if self.data_map[index] is None:
             self.data_map[index] = []
         self.data_map[index].append([key, value])
 
@@ -36,17 +36,13 @@ class HashTable:
 
 
 
-my_hash_table = HashTable()
-
-my_hash_table.set_item('bolts', 1400)
-my_hash_table.set_item('washers', 50)
-
-print(my_hash_table.keys())
-"""
-    EXPECTED OUTPUT:
-    ----------------
-    Bolts: 1400
-    Washers: 50
-    Lumber: None
-
-"""
+def twoSum(nums, target):
+    reference = HashTable()
+    index = []
+    for i, num in enumerate(nums):
+        complement = target - num
+        if complement in reference.keys:
+            index.append(i), index.append(reference.get_item(complement))
+            return index
+        reference.set_item(num, i)
+    return index

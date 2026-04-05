@@ -49,7 +49,19 @@ class BinarySearchTree:
                         return False
                     else:
                         temp = temp.right
-                    
+
+    def recursive_invert(self, node):
+        if node is None:
+            return None
+        else:
+            node.left, node.right = node.right, node.left
+            self.recursive_invert(node.left)
+            self.recursive_invert(node.right)
+            return node
+
+    def inverse(self):
+        return self.recursive_invert(self.root)
+
 
     def print(self):
         temp = self.root
