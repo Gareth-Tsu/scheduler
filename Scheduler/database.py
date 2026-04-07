@@ -101,6 +101,32 @@ def delete_event(event_id):
     conn.commit()
     conn.close()
 
+def get_event_by_id(event_id):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("SELECT * FROM events WHERE id = ?", (event_id,))
+    row = cursor.fetchone()
+    conn.close()
+    return row
+
+def update_event(event):
+    conn = get_connection()
+    cursor = conn.cursor()
+    cursor.execute("""
+        UPDATE events SET title=?, day=?, start=?, end=?, location=?, priority=?
+        WHERE id=?
+    """, (
+        event.title,
+        event.day,
+        event.start_time.strftime("%H:%M"),
+        event.end_time.strftime("%H:%M"),
+        event.location,
+        event.priority,
+        event.id
+    ))
+    conn.commit()
+    conn.close()
+
 def load_events_for_user(user_id):
     """Load all events belonging to a specific user."""
     conn = get_connection()

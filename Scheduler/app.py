@@ -3,7 +3,8 @@ from functools import wraps
 from logic import User, Event, TimeConflict
 from database import (init_db, save_event, delete_event,
                       load_events_for_user, create_user,
-                      get_user_by_username, check_password)
+                      get_user_by_username, check_password,
+                      get_event_by_id, update_event)
 import os
 from dotenv import load_dotenv
 
@@ -132,6 +133,31 @@ def remove_event():
 
     return redirect(url_for("home"))
 
+@app.route("/edit/<event_id>", methods=["GET", "POST"])
+@login_required
+def edit_event(event_id):
+    if request.method == "GET":
+        row = get_event_by_id(event_id)
+        return render_template("edit.html", event=row)
+    if request.method == "POST":
+        title = request.form["title"]
+        day = request.form["day"]
+        start = request.form["start"]
+        end = request.form["end"]
+        location = request.form["location"]
+        priority = int(request.form["priority"])
 
+        user = get_current_user()
+        user = get_current_user()
+        try:
+            event = user.edit_event(event_id, title=title, day=day,
+                                    start_time=start, end_time=end,
+                                    location=location, priority=priority)
+            update_event(event)
+        except TimeConflict as e:
+            row = get_event_by_id(event_id)
+            return render_template("edit.html", event=row, conflict=str(e))
+
+        return redirect(url_for("home"))
 if __name__ == "__main__":
     app.run(debug=True)

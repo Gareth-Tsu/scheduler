@@ -91,6 +91,9 @@ class Day:
         else:
             raise IndexError
 
+    def get_event_by_id(self, event_id):
+        return next((e for e in self.events if e.id == event_id), None)
+
 
     def list_events(self):
         return self.events
@@ -122,6 +125,22 @@ class Event:
             # Invalid event duration
             raise TimeConflict()
 
+    def edit(self, day=None, start_time=None, end_time=None, title=None, location=None, priority=None):
+        if start_time:
+            self.start_time = datetime.strptime(start_time, "%H:%M")
+        if end_time:
+            self.end_time = datetime.strptime(end_time, "%H:%M")
+        if title:
+            self.title = title
+        if location:
+            self.location = location
+        if priority:
+            self.priority = priority
+        if day:
+            self.day = day
+            self.day_num = days_of_week[day.lower()]
+
+
     def __str__(self):
         return f'{self.title}, at {self.location}, on {self.day}, at {self.start_time.hour}:{self.start_time.minute}'
 
@@ -141,6 +160,49 @@ class User:
     def add_event(self, *args):
         for event in args:
             self.week[event.day_num].add_event(event)
+
+    # go through the users week find the event and return it for flask
+    def edit_event(self, event_id, **changes):
+        # find the event and which day it currently lives on
+        current_day = None
+        event = None
+        for day in self.week:
+            event = day.get_event_by_id(event_id)
+            if event:
+                current_day = day
+                break
+
+        if event is None:
+            raise KeyError(f"Event {event_id} not found")
+
+        # save originals for rollback
+        original = {
+            "day": event.day,
+            "start_time": event.start_time.strftime("%H:%M"),
+            "end_time": event.end_time.strftime("%H:%M"),
+            "title": event.title,
+            "location": event.location,
+            "priority": event.priority
+        }
+
+        # remove from current day
+        current_day.remove_event(event)
+
+        # apply changes
+        event.edit(**changes)
+
+        # add to new day (may be different from current day)
+        new_day = self.week[event.day_num]
+        try:
+            new_day.add_event(event)
+        except TimeConflict:
+            # rollback
+            event.edit(**original)
+            self.week[event.day_num].add_event(event)
+            raise
+
+        return event
+
 
     def __repr__(self):
         return self.name

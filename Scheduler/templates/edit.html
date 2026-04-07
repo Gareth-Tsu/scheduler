@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Event</title>
+    <style>
+        * { box-sizing: border-box; margin: 0; padding: 0; }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            padding: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+        }
+
+        .form-container {
+            background: #0f3460;
+            border-radius: 8px;
+            padding: 30px;
+            width: 100%;
+            max-width: 500px;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.3);
+        }
+
+        h2 {
+            margin-bottom: 20px;
+            color: #e0e0e0;
+        }
+
+        .form-row {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 14px;
+            flex-wrap: wrap;
+        }
+
+        input, select {
+            padding: 8px;
+            border: 1px solid #444;
+            background: #1a1a2e;
+            color: #e0e0e0;
+            border-radius: 6px;
+            font-size: 0.9em;
+            flex: 1;
+        }
+
+        button {
+            background: #4a90e2;
+            color: white;
+            border: none;
+            padding: 10px 24px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 0.95em;
+            margin-top: 6px;
+        }
+
+        button:hover { background: #357abd; }
+
+        .cancel {
+            background: #555;
+            margin-left: 10px;
+        }
+
+        .cancel:hover { background: #444; }
+
+        .error-banner {
+            background: #ffe0e0;
+            border: 1px solid #ffaaaa;
+            color: #cc0000;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 16px;
+        }
+    </style>
+</head>
+<body>
+    <div class="form-container">
+        <h2>Edit Event</h2>
+
+        {% if conflict %}
+        <div class="error-banner">
+             {{ conflict }}
+        </div>
+        {% endif %}
+
+        <form action="/edit/{{ event.id }}" method="POST">
+
+            <div class="form-row">
+                <input name="title" placeholder="Title" value="{{ event.title }}" required>
+                <input name="location" placeholder="Location" value="{{ event.location }}" required>
+            </div>
+
+            <div class="form-row">
+                <select name="day" required>
+                    <option value="monday"    {% if event.day == "monday"    %}selected{% endif %}>Monday</option>
+                    <option value="tuesday"   {% if event.day == "tuesday"   %}selected{% endif %}>Tuesday</option>
+                    <option value="wednesday" {% if event.day == "wednesday" %}selected{% endif %}>Wednesday</option>
+                    <option value="thursday"  {% if event.day == "thursday"  %}selected{% endif %}>Thursday</option>
+                    <option value="friday"    {% if event.day == "friday"    %}selected{% endif %}>Friday</option>
+                    <option value="saturday"  {% if event.day == "saturday"  %}selected{% endif %}>Saturday</option>
+                    <option value="sunday"    {% if event.day == "sunday"    %}selected{% endif %}>Sunday</option>
+                </select>
+            </div>
+
+            <div class="form-row">
+                <input name="start" type="time" value="{{ event.start }}" required>
+                <input name="end" type="time" value="{{ event.end }}" required>
+            </div>
+
+            <div class="form-row">
+                <select name="priority">
+                    <option value="1" {% if event.priority == 1 %}selected{% endif %}>Priority 1 (highest)</option>
+                    <option value="2" {% if event.priority == 2 %}selected{% endif %}>Priority 2</option>
+                    <option value="3" {% if event.priority == 3 %}selected{% endif %}>Priority 3</option>
+                    <option value="4" {% if event.priority == 4 %}selected{% endif %}>Priority 4 (default)</option>
+                </select>
+            </div>
+
+            <div>
+                <button type="submit">Save Changes</button>
+                <a href="/"><button type="button" class="cancel">Cancel</button></a>
+            </div>
+
+        </form>
+    </div>
+</body>
+</html>
