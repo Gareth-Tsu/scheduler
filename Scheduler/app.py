@@ -119,6 +119,10 @@ def add_event():
         return render_template("index.html", week=user.week,
                                conflict="Invalid time format. Use HH:MM",
                                username=session["username"])
+    except KeyError:
+        return render_template("index.html", week=user.week,
+                               conflict="Invalid day name.",
+                               username=session["username"])
 
     return redirect(url_for("home"))
 
@@ -129,7 +133,7 @@ def remove_event():
     event_id = request.form["event_id"]
 
     # Remove from database first
-    delete_event(event_id)
+    delete_event(event_id, session["user_id"])
 
     return redirect(url_for("home"))
 
@@ -137,7 +141,9 @@ def remove_event():
 @login_required
 def edit_event(event_id):
     if request.method == "GET":
-        row = get_event_by_id(event_id)
+        row = get_event_by_id(event_id, session["user_id"])
+        if row is None:
+            return redirect(url_for("home"))
         return render_template("edit.html", event=row)
     if request.method == "POST":
         title = request.form["title"]
@@ -148,14 +154,13 @@ def edit_event(event_id):
         priority = int(request.form["priority"])
 
         user = get_current_user()
-        user = get_current_user()
         try:
             event = user.edit_event(event_id, title=title, day=day,
                                     start_time=start, end_time=end,
                                     location=location, priority=priority)
             update_event(event)
-        except TimeConflict as e:
-            row = get_event_by_id(event_id)
+        except (TimeConflict, KeyError) as e:
+            row = get_event_by_id(event_id, session["user_id"])
             return render_template("edit.html", event=row, conflict=str(e))
 
         return redirect(url_for("home"))

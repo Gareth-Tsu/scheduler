@@ -93,18 +93,18 @@ def save_event(event, user_id):
     conn.commit()
     conn.close()
 
-def delete_event(event_id):
-    """Delete an event by its ID."""
+def delete_event(event_id, user_id):
+    """Delete an event by its ID, only if it belongs to the given user."""
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("DELETE FROM events WHERE id = ?", (event_id,))
+    cursor.execute("DELETE FROM events WHERE id = ? AND user_id = ?", (event_id, user_id))
     conn.commit()
     conn.close()
 
-def get_event_by_id(event_id):
+def get_event_by_id(event_id, user_id):
     conn = get_connection()
     cursor = conn.cursor()
-    cursor.execute("SELECT * FROM events WHERE id = ?", (event_id,))
+    cursor.execute("SELECT * FROM events WHERE id = ? AND user_id = ?", (event_id, user_id))
     row = cursor.fetchone()
     conn.close()
     return row

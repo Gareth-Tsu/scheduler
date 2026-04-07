@@ -130,6 +130,10 @@ class Event:
             self.start_time = datetime.strptime(start_time, "%H:%M")
         if end_time:
             self.end_time = datetime.strptime(end_time, "%H:%M")
+        if start_time or end_time:
+            if self.end_time <= self.start_time:
+                raise TimeConflict()
+            self.duration = self.end_time - self.start_time
         if title:
             self.title = title
         if location:
@@ -142,7 +146,7 @@ class Event:
 
 
     def __str__(self):
-        return f'{self.title}, at {self.location}, on {self.day}, at {self.start_time.hour}:{self.start_time.minute}'
+        return f'{self.title}, at {self.location}, on {self.day}, at {self.start_time.strftime("%H:%M")}'
 
     def __repr__(self):
         return (
